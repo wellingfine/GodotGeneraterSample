@@ -1,0 +1,34 @@
+<!--
+  生成器项目文件：描述源代码生成器如何编译。
+  生成器是一个独立的类库，由 C# 编译器在编译主项目时加载运行。
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!--
+      生成器必须以 netstandard2.0 为目标。
+      Visual Studio、Rider 和 dotnet build 中运行的编译器只保证能加载这个版本的类库。
+      注意：这只影响生成器本身，主项目仍然可以使用 net10.0。
+    -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- netstandard2.0 默认使用较旧的 C# 版本，这里允许使用最新语法（如文件作用域命名空间）。 -->
+    <LangVersion>latest</LangVersion>
+    <!-- 启用可空引用类型检查。 -->
+    <Nullable>enable</Nullable>
+    <!-- 声明这是 Roslyn 组件，IDE 会提供调试生成器等相关支持。 -->
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <!-- 启用分析器的额外规则检查，提醒生成器避免使用不适合在编译期调用的 API（例如读写文件）。 -->
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <!--
+      关闭 RS2008 警告。
+      该警告要求为自定义诊断（本项目的 EGD001）维护“发布跟踪”文件，示例项目不需要它。
+    -->
+    <NoWarn>$(NoWarn);RS2008</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--
+      Roslyn 编译器 API，生成器通过它阅读代码并添加新代码。
+      PrivateAssets="all" 表示这个依赖只供生成器自己使用，不会传递给引用它的主项目。
+    -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+# Godot editor/import cache and generated data
+.godot/
+.mono/
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# IDE and user-specific files
+.vs/
+*.user
+*.suo
+*.csproj.user
+*.sln.docstates
+
+# macOS
+.DS_Store

@@ -1,0 +1,37 @@
+<!--
+  主项目文件：描述 Godot 游戏代码如何编译。
+  Godot.NET.Sdk/4.7.2 是 Godot 官方提供的构建配置，版本号应与使用的 Godot 编辑器版本一致。
+  它会自动引入 Godot 的 C# API，并启用 Godot 自带的源代码生成器。
+-->
+<Project Sdk="Godot.NET.Sdk/4.8.0-dev.7">
+  <PropertyGroup>
+    <!-- 目标框架：游戏代码运行在 .NET 10 上。 -->
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- 启用可空引用类型检查：可能为 null 的值没有处理时，编译器会给出警告。 -->
+    <Nullable>enable</Nullable>
+    <!-- 新建 C# 文件时默认使用的命名空间。 -->
+    <RootNamespace>ExportDemo</RootNamespace>
+    <!--
+      默认情况下，生成器产生的代码只存在于内存中。
+      开启下面两项后，生成的代码会保存到磁盘，方便学习和排查问题：
+      保存位置是中间输出目录下的 Generated 文件夹（本项目中为 .godot/mono/temp/obj/Generated/）。
+      这些文件每次构建都会重新生成，手动修改不会生效。
+    -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- 生成器源码不作为游戏代码编译；生成器以编译期 Analyzer 接入。 -->
+    <!--
+      SDK 默认会编译项目目录及子目录中的所有 .cs 文件。
+      生成器项目位于子目录中，它有自己的项目文件和依赖，因此在这里排除，避免被当成游戏代码编译。
+    -->
+    <Compile Remove="ExportSummaryGenerator/**/*.cs" />
+    <!--
+      引用生成器项目：
+      - OutputItemType="Analyzer"：把它作为“分析器”加载，也就是在编译时运行，而不是在游戏运行时调用。
+      - ReferenceOutputAssembly="false"：游戏代码不直接引用生成器的 DLL，生成器不会被打包进游戏。
+    -->
+    <ProjectReference Include="ExportSummaryGenerator/ExportSummaryGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>
